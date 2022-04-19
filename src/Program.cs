@@ -30,7 +30,7 @@ static void HandleArgs() {
 static string GetArgValue(string[] argArray, string arg) {
     var argPosition = Array.IndexOf(argArray, arg);
     string? argValue = null;
-    try { argValue = argArray.GetValue(argPosition + 1).ToString(); } catch {}
+    try { argValue = argArray.GetValue(argPosition + 1)!.ToString(); } catch {}
     if (argValue == null) throw new Exception($"Parameter {arg} has to be followed by a valid value");
     return argValue;
 }
