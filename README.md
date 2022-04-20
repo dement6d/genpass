@@ -7,7 +7,7 @@
 - Generate a password out of lower case letters only:
   - ```genpass -c qwertyuiopasdfghjklzxcvbnm```
 - Generate a password into a text file
-  - ```echo | genpass >> password.txt```
+  - ```genpass -o password.txt```
 
 # Installing
 - Clone the repository
