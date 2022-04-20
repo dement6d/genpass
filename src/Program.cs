@@ -2,7 +2,9 @@
 try { HandleArgs(); } catch (Exception e) { Console.WriteLine(e.Message); Environment.Exit(-1); }
 
 // output the generated string
-Console.WriteLine(RandomString(Config.length, Config.characters));
+var password = RandomString(Config.length, Config.characters);
+Console.WriteLine(Config.copy ? $"Copied {password}" : password);
+// if (Config.copy) ;
 
 static string RandomString(int length, string chars)
 {
@@ -15,16 +17,17 @@ static void HandleArgs() {
     var args = Environment.GetCommandLineArgs();
     if (args.Contains("help") || args.Contains("-h") || args.Contains("--help") || args.Contains("-?") || args.Contains("?"))
         WriteHelp();
-    if (args.Contains("-e")) {
-        char[]? excludeChars = GetArgValue(args, "-e").ToCharArray();
-        Config.characters = ReplaceAll(Config.characters, excludeChars, "");
-    }
-    if (args.Contains("-c")) Config.characters = GetArgValue(args, "-c");
     if (args.Contains("-l")) {
         bool parseSuccessful = int.TryParse(GetArgValue(args, "-l"), out int length);
         if (!parseSuccessful) throw new InvalidCastException("Failed to convert -l argument value to a number");
         Config.length = length;
     }
+    if (args.Contains("-e")) {
+        char[]? excludeChars = GetArgValue(args, "-e").ToCharArray();
+        Config.characters = ReplaceAll(Config.characters, excludeChars, "");
+    }
+    //if (args.Contains("--copy")) Config.copy = true;
+    if (args.Contains("-c")) Config.characters = GetArgValue(args, "-c");
 }
 
 static string GetArgValue(string[] argArray, string arg) {
@@ -42,21 +45,23 @@ static string ReplaceAll(string seed, char[] chars, string replacementCharacter)
 
 static void WriteHelp() {
     Console.WriteLine(
-      "-l   Length of the password\n" +
-      "-e   List of characters to exclude\n" +
-      "-c   List of characters to include\n" +
+      "-l       Length of the password\n" +
+      "-e       List of characters to exclude\n" +
+      "-c       List of characters to include\n" +
+      // "--copy   Copies the generated password to the clipboard\n" +
       "\n" +
       "Example usage:\n" +
-      "genpass -e \\!\\&\\(\\)\\$\\?\\;\\\\ -l 50"  
+      "genpass -e \\!\\&\\(\\)\\$\\?\\;\\*\\\\\\*\\'\\\"\\`\\<\\> -l 50"  
     );
     Environment.Exit(0);
 }
 
 public static class Config {
+    public static bool copy {get; set;} = false;
     public static string characters {get; set;} = 
     "qwertyuiopasdfghjklzxcvbnm" 
     + "QWERTYUIOPASDFGHJKLZXCVBNM" 
     + "1234567890" 
     + "`~!@#$%^&*()_+-=[];'{}:\"\\,.<>/?";
-    public static int length {get; set;} = 25;
+    public static int length {get; set;} = 100;
 }
