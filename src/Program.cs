@@ -46,8 +46,7 @@ static string GetArgValue(string[] argArray, string arg) {
     return argValue;
 }
 
-static string ReplaceAll(string seed, char[] chars, string replacementCharacter)
-{
+static string ReplaceAll(string seed, char[] chars, string replacementCharacter) {
     return chars.Aggregate(seed, (str, cItem) => str.Replace(cItem.ToString(), replacementCharacter));
 }
 
