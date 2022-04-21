@@ -3,8 +3,9 @@ try { HandleArgs(); } catch (Exception e) { Console.WriteLine(e.Message); Enviro
 
 // output the generated string
 var password = RandomString(Config.length, Config.characters);
-Console.WriteLine(Config.copy ? $"Copied {password}" : password);
-// if (Config.copy) ;
+if (Config.copy) await Genpass.Clipboard.Copy(password);
+Console.WriteLine(Config.copy ? $"Copied password to clipboard" : password);
+if (Genpass.SysInfo.OS == System.Runtime.InteropServices.OSPlatform.Windows) Console.ReadKey();
 
 static string RandomString(int length, string chars)
 {
@@ -26,7 +27,10 @@ static void HandleArgs() {
         char[]? excludeChars = GetArgValue(args, "-e").ToCharArray();
         Config.characters = ReplaceAll(Config.characters, excludeChars, "");
     }
-    //if (args.Contains("--copy")) Config.copy = true;
+    if (args.Contains("--copy")) {
+        Config.characters = Config.characters.Replace("\"", "");
+        Config.copy = true;
+    }
     if (args.Contains("-c")) Config.characters = GetArgValue(args, "-c");
     if (args.Contains("-o")) {
         string path = GetArgValue(args, "-o");
@@ -56,7 +60,7 @@ static void WriteHelp() {
       "-e       List of characters to exclude\n" +
       "-c       List of characters to include\n" +
       "-o       File path to output the password to\n" +
-      // "--copy   Copies the generated password to the clipboard\n" +
+      "--copy   Copies the generated password to the clipboard\n" +
       "\n" +
       "Example usage:\n" +
       "genpass -e \\!\\&\\(\\)\\$\\?\\;\\*\\\\\\*\\'\\\"\\`\\<\\> -l 50"  
