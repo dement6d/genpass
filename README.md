@@ -1,5 +1,6 @@
 <h1 align="center">genpass</h1>
-<p align="center">A lightweight, simple and easy to use password generator</p>
+<p align="center">A lightweight, simple and easy to use password generator<br>
+<a href="https://snipesharp.xyz/donate">Support this project</a></p>
 
 # Examples
 - Generate a long password that won't execute any unwanted commands when pasted in the Terminal:
