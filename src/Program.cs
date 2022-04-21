@@ -1,11 +1,23 @@
-﻿// handle arguments
+﻿if (Genpass.SysInfo.OS == System.Runtime.InteropServices.OSPlatform.Windows) {
+    Console.WindowHeight = 20;
+    Console.BufferHeight = 20;
+    Console.WindowWidth = 75;
+    Console.BufferWidth = 75;
+    Console.ForegroundColor = ConsoleColor.Green;
+}
+
+// handle arguments
 try { HandleArgs(); } catch (Exception e) { Console.WriteLine(e.Message); Environment.Exit(-1); }
 
 // output the generated string
 var password = RandomString(Config.length, Config.characters);
 if (Config.copy) await Genpass.Clipboard.Copy(password);
 Console.WriteLine(Config.copy ? $"Copied password to clipboard" : password);
-if (Genpass.SysInfo.OS == System.Runtime.InteropServices.OSPlatform.Windows) Console.ReadKey();
+
+if (Genpass.SysInfo.OS == System.Runtime.InteropServices.OSPlatform.Windows) {
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.ReadKey();
+}
 
 static string RandomString(int length, string chars)
 {
@@ -28,7 +40,17 @@ static void HandleArgs() {
         Config.characters = ReplaceAll(Config.characters, excludeChars, "");
     }
     if (args.Contains("--copy")) {
-        Config.characters = Config.characters.Replace("\"", "");
+        Console.WriteLine("Removing symbols that may cause issues when copying to clipboard");
+        Config.characters = Config.characters
+            .Replace("'", "")
+            .Replace("{", "")
+            .Replace("}", "")
+            .Replace(")", "")
+            .Replace("(", "")
+            .Replace(";", "")
+            .Replace("&", "")
+            .Replace(":", "")
+            .Replace("\"", "");
         Config.copy = true;
     }
     if (args.Contains("-c")) Config.characters = GetArgValue(args, "-c");
