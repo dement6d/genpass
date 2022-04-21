@@ -13,14 +13,11 @@ namespace Genpass
         public static async Task Copy(string content) {
             switch (SysInfo.OS)
             {
-                case {} os when os == OSPlatform.Linux:
+                case {} os when os == OSPlatform.Linux || os == OSPlatform.OSX:
                     await CopyLinux(content);
                     break;
                 case {} os when os == OSPlatform.Windows:
                     await CopyWindows(content);
-                    break;
-                case {} os when os == OSPlatform.OSX:
-                    await CopyOSX(content);
                     break;
                 default:
                     Console.WriteLine("Copying to clipboard not supported on this OS");
@@ -43,16 +40,6 @@ namespace Genpass
             await Process.Start(new ProcessStartInfo{
                 FileName = "/bin/bash",
                 Arguments = $"-c \"echo \"{content}\" | xclip -selection clipboard\"",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true
-            })!.WaitForExitAsync();
-            return;
-        }
-        protected static async Task CopyOSX(string content) {
-            await Process.Start(new ProcessStartInfo{
-                FileName = "/bin/bash",
-                Arguments = "-c \" " + $"echo \"{content}\" | xclip -selection clipboard" + " \"",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true
