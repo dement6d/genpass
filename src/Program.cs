@@ -47,6 +47,8 @@ static void HandleArgs() {
             .Replace("}", "")
             .Replace(")", "")
             .Replace("(", "")
+            .Replace(">", "")
+            .Replace("<", "")
             .Replace(";", "")
             .Replace("&", "")
             .Replace(":", "")
